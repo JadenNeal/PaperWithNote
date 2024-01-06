@@ -1,8 +1,5 @@
----
-title: ACKTR
-date: 2020-03-27 22:11:16
-tags: [论文阅读, 强化学习, ACKTR]
----
+# ACKTR
+
 本论文思维导图如下：
 <center><img src="https://s1.ax1x.com/2020/03/27/GiWIEV.png" alt="GiWIEV.png" border="0" /></center>
 

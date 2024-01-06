@@ -1,11 +1,9 @@
----
-title: Vs Code 配置C语言问题
-date: 2019-12-27 14:53:06
-tags: 其他
----
+# Vs Code 配置C语言问题
+
 **写在最前，本篇文章是针对Windows系统上gdb调试失败问题的，有关完整配置教程，直接参见末尾的参考资料。**
-<!--more-->
+
 # Vs code配置C语言
+
 最近需要用到C，但是VS太大了，对付一般小项目有点大材小用，所以请出小巧的Vs Code，自带markdown书写，插件居多，很好用就是了。  
 那么，配置C/C++该怎么搞呢？  
 
@@ -15,18 +13,21 @@ tags: 其他
 4. 代码测试
 
 ## 下载vs code
+
 这一步无需多言，打开必应搜**vs code**即可（当然用百度也不拦着，就是需要找一下官网）。
 具体网址：https://code.visualstudio.com/
 
 ## 下载MinGW
+
 从[这里](https://osdn.net/projects/mingw/downloads/68260/mingw-get-setup.exe/)下载。然后点击安装，路径可选。  
-**安装完成之后，将bin目录加入到环境变量。**
+**安装完成之后，将bin目录加入到环境变量**。
+
 <div align="center"><img src="https://s2.ax1x.com/2019/12/27/lVwG1e.png" alt="env_var.png" border="0" heigh="60%" width="60%"></div>  
 
-但值得注意的是，**这一步后来经过检查是失败的，**见下面`launch.json`的配置。因此使用的是dev c++中的MinGW，直接下载[dev c++](https://sourceforge.net/projects/orwelldevcpp/)即可。相应的MinGW的bin目录也应添加到环境变量中。  
-
+但值得注意的是，**这一步后来经过检查是失败的**，见下面`launch.json`的配置。因此使用的是dev c++中的MinGW，直接下载[dev c++](https://sourceforge.net/projects/orwelldevcpp/)即可。相应的MinGW的bin目录也应添加到环境变量中。  
 
 ## 配置json文件
+
 其实没必要新建c工程，再依次生成json，再进行修改，而是直接新建相应的json文件即可。  
 有三个json文件：
 
@@ -37,6 +38,7 @@ tags: 其他
 然后是具体配置：
 
 - c_cpp_properties.json
+
 ```json
 {
     "configurations": [
@@ -61,6 +63,7 @@ tags: 其他
 ```
 
 - launch.json
+
 ```json
 {
     // 使用 IntelliSense 了解相关属性。 
@@ -92,6 +95,7 @@ tags: 其他
     ]
 }
 ```
+
 诶？到这一步，里面的`miDebuggerPath`中的`dev c++`从哪冒出来的呢？  
 因为到后面，本人发现只要是从官网下载下来的MinGW，写成该路径，断点调试后总会跳出下图所示的错误。
 <div align="center"><img src="https://s2.ax1x.com/2019/12/27/lVwQk6.png" alt="error.png" border="0" heigh="60%" width="60%"></div>
@@ -103,12 +107,13 @@ tags: 其他
 那么用官网的为什么不行呢？额，在源程序添加断点后，在`Terminal`中输入`gdb test.c`，得到以下提示：
 <div align="center"><img src="https://s2.ax1x.com/2019/12/27/lVw8pD.png" alt="mingw32.png" border="0" heigh="60%" width="60%"></div>
 
-原来自带的是32位的，问题就是出在这里，**但我目前确实没找到用哪个才是64位的。**  
-**所以换个思路，不就是需要MinGW吗？除了官网还有许多替代品，因此还有许多可选选项。**  
+原来自带的是32位的，问题就是出在这里，**但我目前确实没找到用哪个才是64位的**  
+**所以换个思路，不就是需要MinGW吗？除了官网还有许多替代品，因此还有许多可选选项**  
 正好本人电脑上有dev c++，于是直接用的自带的gcc编译器，结果通过了。  
 有大佬能解答下最好。
 
 - tasks.json
+
 ```json
 {
     // See https://go.microsoft.com/fwlink/?LinkId=733558
@@ -135,7 +140,9 @@ tags: 其他
 至此，json文件就配置完成了。
 
 ## 代码测试
+
 输入以下代码：
+
 ```c
 #include <stdio.h>
 
@@ -151,11 +158,13 @@ int main()
     return 0;
 }
 ```
+
 结果截图：
 
 <div align="center"><img src="https://s2.ax1x.com/2019/12/27/lVwJ6H.png" alt="test.png" border="0" heigh="60%" width="60%"></div>
 
 ## 额外的说明
+
 多啰嗦几句。  
 其实，单纯编译运行c程序的话只需要`gcc`就可以；同理，单纯编译运行C++程序的话只需要`g++`就可以了。`gdb`**只是为了调试用**。  
 
@@ -163,12 +172,14 @@ int main()
 很简单，用最原始的命令行解决。
 
 ### 命令行编译运行c程序
+
 首先，新建一个C程序，命名为`test.c`，然后编写。  
 接着，在`Terminal`中输入`gcc test.c -o test`，意思是编译`test.c`文件，生成`test.exe`。  
 然后，再在终端输入`test`，即可看到输出。
 <div align="center"><img src="https://s2.ax1x.com/2019/12/27/lVwYXd.png" alt="example.png" border="0" heigh="60%" width="60%"></div>
 
 ## 总结
+
 vs code配置c/c++的方法基本一致，都是下载完之后，将其添加到系统环境变量，再配置相关的json文件即可。本人出问题的时候搜索了大量的教程，也遇到了按照教程配置结果出问题的朋友。比如
 
 - 错误，退出代码为1
@@ -181,10 +192,6 @@ vs code配置c/c++的方法基本一致，都是下载完之后，将其添加�
 这里本人遇到的是启动调试失败，然后使用dev c++的MinGW就成功了。
 
 ## 参考资料
+
 1. [暮无雪代码博客](https://www.520mwx.com/view/32843)
 2. [stackoverflow上关于调试失败问题的解答](https://stackoverflow.com/questions/47639685/gdb-error-not-in-executable-format-file-format-not-recognized)
-
-
-
-
-
