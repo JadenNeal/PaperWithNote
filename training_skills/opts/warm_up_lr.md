@@ -62,7 +62,8 @@ optimizer_Adam = torch.optim.Adam(model.parameters(), lr=0.1)  # 生成优化器
 lr_schedule = cosine_scheduler(...)
 
 for epoch in range(100):  # 假设迭代100个epoch 
-    for idx, (x, y) in train_loop:
+    for i, (x, y) in train_loop:
+        idx = epoch * len(loader_train) + i
         for params in optimizer_Adam.param_groups:             
             # 遍历Optimizer中的每一组参数           
             params['lr'] = lr_schedule[idx]            
